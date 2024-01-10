@@ -15,24 +15,22 @@ import {
 import COLORS from '../Constants/colors';
 import TextInput from 'react-native-text-input-interactive';
 import { useNavigation } from '@react-navigation/native';
+import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
+import { authentication, db  } from '../firebase.config';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { authentication } from '../firebase.config';
-// import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
-// import { db } from '../firebase.config';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignupScreen = () => {
   const navigation = useNavigation();
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState('')
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [emailValidationMessage, setEmailValidationMessage] = useState('');
   const [emailValid, setEmailValid] = useState(true);
-  const [passwordValidationMessage, setPasswordValidationMessage] =
-    useState('');
+  const [passwordValidationMessage, setPasswordValidationMessage] = useState('');
   const [passwordValid, setPasswordValid] = useState(true);
-  const [usernameValidationMessage, setUsernameValidationMessage] =
-    useState('');
+  const [usernameValidationMessage, setUsernameValidationMessage] = useState('');
   const [usernameValid, setUsernameValid] = useState(true);
 
   const handleUsernameChange = (inputText) => {
@@ -80,8 +78,7 @@ const SignupScreen = () => {
   };
 
   const isPasswordValid = (password) => {
-    const passwordPattern =
-      /^(?=.*[a-z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,}$/;
     return passwordPattern.test(password);
   };
 
@@ -112,16 +109,18 @@ const SignupScreen = () => {
     }
 
     createUserWithEmailAndPassword(authentication, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setUser(username);
-        console.log(user);
+    .then((userCredential) => {
+      const user = userCredential.user;
+      setUser(username);
+      console.log(user);
 
-        // // Set the displayName
-        // // await updateProfile(authentication.currentUser, {
-        // //   displayName: username,
-        // // });
-        // // Database connection
+      // AsyncStorage.setItem("user", JSON.stringify(user));
+
+      // Set the displayName
+      // await updateProfile(authentication.currentUser, {
+      //   displayName: username,
+      // });
+        // Database connection
         // const userId = user.uid;
         // const userDocRef = doc(db, 'users', userId);
         // const docRef = setDoc(userDocRef, {
@@ -133,7 +132,7 @@ const SignupScreen = () => {
       })
       .then(() => {
         setIsSignedUp(true);
-        navigation.navigate('Home');
+        navigation.navigate('Login');
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {
@@ -154,7 +153,7 @@ const SignupScreen = () => {
   return (
     <View style={styles.container}>
       <View>
-        <Image source={require('../assets/6333050.jpg')} style={styles.image} />
+        {/* <Image source={require('../assets/6333050.jpg')} style={styles.image} /> */}
       </View>
       <View>
         <Text style={styles.text1}>Register</Text>
@@ -200,11 +199,9 @@ const SignupScreen = () => {
           enableIcon={true}
           onBlur={onBlurPassword}
           onIconPress={togglePasswordVisibility}
-          iconImageSource={
-            isPasswordVisible
-              ? require('../assets/favicon.png')
-              : require('../assets/favicon.png')
-          }
+          // iconImageSource={
+          //   isPasswordVisible ? require('../assets/favicon.png') : require('../assets/favicon.png')
+          // }
         />
         <TouchableOpacity style={styles.button} onPress={registerUser}>
           <Text style={styles.text3}>Signup</Text>
