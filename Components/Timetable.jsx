@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Alert } from 'react-native';
+import { StyleSheet, Text, View, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import TimeTable from '@mikezzb/react-native-timetable';
 import Modal from 'react-native-modal';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const eventGroups = [
   {
@@ -23,7 +24,7 @@ const eventGroups = [
     },
   },
   {
-    courseId: 'CSCI2100',
+    courseId: 'CSCI2  ``100',
     title: 'Data Structures',
     sections: {
       'A - LEC': {
@@ -46,7 +47,7 @@ const eventGroups = [
     sections: {
       'BEC1 - CLW': {
         days: [2, 4],
-        startTimes: ['10:30', '8:30'],
+        startTimes: ['10:30', '9:30'],
         endTimes: ['11:15', '10:15'],
         locations: ['Online Teaching', 'Online Teaching'],
       },
@@ -114,20 +115,26 @@ const Timetable = () => {
   return (
     <View>
       <Text>Okari Nyandika!</Text>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <TimeTable
           eventGroups={eventGroups}
           // events={events}
           eventOnPress={(event) => Alert.alert(`${JSON.stringify(event)}`)}
           configs={{
             numOfDays: 5,
+            endHour: 18,
+            startHour: 9,
           }}
         />
-      </View>
+      </ScrollView>
     </View>
   );
 };
 
 export default Timetable;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    // height: hp('40%'),
+  }
+});

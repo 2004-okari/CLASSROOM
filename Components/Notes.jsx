@@ -1,67 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, FlatList, TouchableOpacity } from 'react-native';
-import { collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase.config';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 
 const Notes = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState([]);
 
-  const addNote = () => {
-    const newNoteRef = notesRef.push();
-    newNoteRef.set({
-      title: title,
-      description: description,
-    }, (error) => {
-      if (error) {
-        alert('Failed to add note!');
-      } else {
-        setTitle('');
-        setDescription('');
-        fetchNotes();
-      }
-    });
+<<<<<<<<<<<<<<  ✨ Codeium Command ⭐ >>>>>>>>>>>>>>>>
+  import AsyncStorage from '@react-native-async-storage/async-storage';
+
+  const storeNote = async () => {
+    try {
+      const note = { title, description };
+      const updatedNotes = [...notes, note];
+      setNotes(updatedNotes);
+      const jsonValue = JSON.stringify(updatedNotes);
+      await AsyncStorage.setItem('@notes', jsonValue);
+    } catch (e) {
+      // saving error
+    }
   };
 
-  const fetchNotes = () => {
-    notesRef.on('value', (snapshot) => {
-      const fetchedNotes = [];
-      snapshot.forEach((childSnapshot) => {
-        const key = childSnapshot.key;
-        const data = childSnapshot.val();
-        fetchedNotes.push({ id: key, ...data });
-      });
-      setNotes(fetchedNotes);
-    });
-  };
-
-  const deleteNote = (id) => {
-    notesRef.child(id).remove(error => {
-      if (error) {
-        alert('Failed to delete note!');
-      } else {
-        fetchNotes();
-      }
-    });
-  };
-
-  const editNote = (id, newTitle, newDescription) => {
-    notesRef.child(id).update({
-      title: newTitle,
-      description: newDescription,
-    }, (error) => {
-      if (error) {
-        alert('Failed to edit note!');
-      } else {
-        fetchNotes();
-      }
-    });
+  const loadNotes = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@notes');
+      return jsonValue != null ? setNotes(JSON.parse(jsonValue)) : null;
+    } catch (e) {
+      // error reading value
+    }
   };
 
   useEffect(() => {
-    fetchNotes();
+    loadNotes();
   }, []);
+<<<<<<<  d65edaf7-29ef-47e1-9786-6d130f21690e  >>>>>>>
 
   return (
     <View style={styles.container}>
@@ -72,41 +52,30 @@ const Notes = () => {
         onChangeText={setTitle}
       />
       <TextInput
-        style={styles.input}
+        style={styles.input2}
         placeholder="Notes"
         value={description}
         onChangeText={setDescription}
         multiline
       />
-      <Button title="Add Note" onPress={addNote} />
-
-      <FlatList
-        data={notes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.noteItem}>
-            <Text style={styles.noteTitle}>{item.title}</Text>
-            <Text style={styles.noteDescription}>{item.description}</Text>
-            <TouchableOpacity onPress={() => deleteNote(item.id)}>
-              <Text>Delete</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => editNote(item.id, item.title, item.description)}>
-              <Text>Edit</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+      <Button title="Add Note" onPress={() => {}} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 16,
   },
   input: {
     height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 8,
+    paddingHorizontal: 8,
+  },
+  input2: {
+    height: 120,
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 8,

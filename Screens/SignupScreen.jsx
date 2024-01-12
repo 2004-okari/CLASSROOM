@@ -16,21 +16,22 @@ import COLORS from '../Constants/colors';
 import TextInput from 'react-native-text-input-interactive';
 import { useNavigation } from '@react-navigation/native';
 import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
-import { authentication, db  } from '../firebase.config';
+import { authentication, db } from '../firebase.config';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignupScreen = () => {
   const navigation = useNavigation();
-  const [user, setUser] = useState('')
+  const [user, setUser] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [emailValidationMessage, setEmailValidationMessage] = useState('');
   const [emailValid, setEmailValid] = useState(true);
-  const [passwordValidationMessage, setPasswordValidationMessage] = useState('');
+  const [passwordValidationMessage, setPasswordValidationMessage] =
+    useState('');
   const [passwordValid, setPasswordValid] = useState(true);
-  const [usernameValidationMessage, setUsernameValidationMessage] = useState('');
+  const [usernameValidationMessage, setUsernameValidationMessage] =
+    useState('');
   const [usernameValid, setUsernameValid] = useState(true);
 
   const handleUsernameChange = (inputText) => {
@@ -78,7 +79,8 @@ const SignupScreen = () => {
   };
 
   const isPasswordValid = (password) => {
-    const passwordPattern = /^(?=.*[a-z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,}$/;
+    const passwordPattern =
+      /^(?=.*[a-z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,}$/;
     return passwordPattern.test(password);
   };
 
@@ -91,6 +93,8 @@ const SignupScreen = () => {
       setPasswordValidationMessage('');
     }
   };
+
+  const usersRef = collection(db, 'users');
 
   const [isSignedUp, setIsSignedUp] = useState(false);
   const registerUser = () => {
@@ -109,26 +113,31 @@ const SignupScreen = () => {
     }
 
     createUserWithEmailAndPassword(authentication, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      setUser(username);
-      console.log(user);
+      .then((userCredential) => {
+        const user = userCredential.user;
+        setUser(username);
+        console.log(user);
 
-      // AsyncStorage.setItem("user", JSON.stringify(user));
+        const userInfo = {
+          email: user.email,
+          image: '', // Placeholder for image URL or path
+          course: '', // Placeholder for course information
+          admissionNumber: '', // Placeholder for admission number
+          name: '', // Placeholder for user's name
+          username: username,
+          phoneNumber: '',
+        };
 
-      // Set the displayName
-      // await updateProfile(authentication.currentUser, {
-      //   displayName: username,
-      // });
-        // Database connection
-        // const userId = user.uid;
-        // const userDocRef = doc(db, 'users', userId);
-        // const docRef = setDoc(userDocRef, {
-        //   username,
-        //   email,
-        //   password,
-        //   userId,
-        // });
+        // Add a new document with a generated id to the 'users' collection
+        usersRef
+          .doc(user.uid)
+          .set(userInfo)
+          .then(() => {
+            console.log('User added with UID: ', user.uid);
+          })
+          .catch((error) => {
+            console.error('Error adding user: ', error);
+          });
       })
       .then(() => {
         setIsSignedUp(true);
