@@ -8,25 +8,53 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Notes = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState([]);
-
-<<<<<<<<<<<<<<  ✨ Codeium Command ⭐ >>>>>>>>>>>>>>>>
-  import AsyncStorage from '@react-native-async-storage/async-storage';
+  const [editIndex, setEditIndex] = useState(null);
 
   const storeNote = async () => {
     try {
       const note = { title, description };
-      const updatedNotes = [...notes, note];
+      const updatedNotes = [...notes];
+
+      if (editIndex !== null) {
+        // Editing existing note
+        updatedNotes[editIndex] = note;
+        setEditIndex(null);
+      } else {
+        // Adding new note
+        updatedNotes.push(note);
+      }
+
       setNotes(updatedNotes);
       const jsonValue = JSON.stringify(updatedNotes);
       await AsyncStorage.setItem('@notes', jsonValue);
+
+      // Clear input fields after adding/editing note
+      setTitle('');
+      setDescription('');
     } catch (e) {
       // saving error
     }
+  };
+
+  const deleteNote = async (index) => {
+    const updatedNotes = [...notes];
+    updatedNotes.splice(index, 1);
+    setNotes(updatedNotes);
+    const jsonValue = JSON.stringify(updatedNotes);
+    await AsyncStorage.setItem('@notes', jsonValue);
+  };
+
+  const editNote = (index) => {
+    const selectedNote = notes[index];
+    setTitle(selectedNote.title);
+    setDescription(selectedNote.description);
+    setEditIndex(index);
   };
 
   const loadNotes = async () => {
@@ -41,7 +69,6 @@ const Notes = () => {
   useEffect(() => {
     loadNotes();
   }, []);
-<<<<<<<  d65edaf7-29ef-47e1-9786-6d130f21690e  >>>>>>>
 
   return (
     <View style={styles.container}>
@@ -58,7 +85,30 @@ const Notes = () => {
         onChangeText={setDescription}
         multiline
       />
-      <Button title="Add Note" onPress={() => {}} />
+      <Button
+        title={editIndex !== null ? 'Update Note' : 'Add Note'}
+        onPress={storeNote}
+      />
+
+      <FlatList
+        horizontal
+        data={notes}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <View style={styles.noteItem}>
+            <Text style={styles.noteTitle}>{item.title}</Text>
+            <Text style={styles.noteDescription}>{item.description}</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={() => editNote(index)}>
+                <Text style={styles.editButton}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => deleteNote(index)}>
+                <Text style={styles.deleteButton}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      />
     </View>
   );
 };

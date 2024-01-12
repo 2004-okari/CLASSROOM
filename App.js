@@ -19,7 +19,6 @@ export default function App() {
         <Tab.Screen name="Login" component={LoginScreen} />
         <Tab.Screen name="Signup" component={SignupScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Timetable" component={Timetable} />
       </Tab.Navigator>
     </NavigationContainer>
   );
