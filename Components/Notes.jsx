@@ -9,12 +9,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
 
 const Notes = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+  const [isNotedModalOpen, setIsNoteModalOpen] = useState(false);
 
   const storeNote = async () => {
     try {
@@ -72,23 +74,32 @@ const Notes = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Title"
-        value={title}
-        onChangeText={setTitle}
-      />
-      <TextInput
-        style={styles.input2}
-        placeholder="Notes"
-        value={description}
-        onChangeText={setDescription}
-        multiline
-      />
-      <Button
-        title={editIndex !== null ? 'Update Note' : 'Add Note'}
-        onPress={storeNote}
-      />
+      <View>
+        <Text onPress={() => setIsNoteModalOpen(true)}>Add Note</Text>
+      </View>
+      <Modal isVisible={isNotedModalOpen}>
+        <Text onPress={() => setIsNoteModalOpen(false)}>Cancel</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Title"
+          value={title}
+          onChangeText={setTitle}
+        />
+        <TextInput
+          style={styles.input2}
+          placeholder="Notes"
+          value={description}
+          onChangeText={setDescription}
+          multiline
+        />
+        <Button
+          title={editIndex !== null ? 'Update Note' : 'Add Note'}
+          onPress={() => {
+            storeNote();
+            setIsNoteModalOpen(false);
+          }}
+        />
+      </Modal>
 
       <FlatList
         horizontal
