@@ -2,7 +2,10 @@ import { StyleSheet, Text, View, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import TimeTable from '@mikezzb/react-native-timetable';
 import Modal from 'react-native-modal';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 const eventGroups = [
   {
@@ -110,7 +113,17 @@ const eventGroups = [
 ];
 
 const Timetable = () => {
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isTimesModalVisible, setIsTimesModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const handleEventPress = (event) => {
+    setSelectedEvent(event);
+    setIsTimesModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsTimesModalVisible(false);
+  };
 
   return (
     <View>
@@ -118,14 +131,19 @@ const Timetable = () => {
       <ScrollView style={styles.container}>
         <TimeTable
           eventGroups={eventGroups}
-          // events={events}
-          eventOnPress={(event) => Alert.alert(`${JSON.stringify(event)}`)}
+          eventOnPress={handleEventPress}
           configs={{
             numOfDays: 5,
             endHour: 18,
             startHour: 9,
           }}
         />
+        <Modal isVisible={isTimesModalVisible}>
+          <View>
+            <Text>{JSON.stringify(selectedEvent)}</Text>
+            <Text onPress={handleCloseModal}>Cancel</Text>
+          </View>
+        </Modal>
       </ScrollView>
     </View>
   );
@@ -136,5 +154,5 @@ export default Timetable;
 const styles = StyleSheet.create({
   container: {
     // height: hp('40%'),
-  }
+  },
 });

@@ -4,7 +4,6 @@ import HomeScreen from '../Screens/HomeScreen';
 import Update from '../Components/Update';
 import Timetable from '../Components/Timetable';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import Notes from './Notes';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +29,6 @@ const BottomTabNavigation = () => {
       <Tab.Screen name="HomePage" component={HomeScreen} />
       <Tab.Screen name="Update" component={Update} />
       <Tab.Screen name="Timetable" component={Timetable} />
-      <Tab.Screen name="notes" component={Notes} />
     </Tab.Navigator>
   );
 };
