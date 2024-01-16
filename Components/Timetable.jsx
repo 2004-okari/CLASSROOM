@@ -7,6 +7,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import { RFPercentage as rp } from 'react-native-responsive-fontsize';
+import COLORS from '../Constants/colors';
 
 
 const eventGroups = [
@@ -132,6 +133,10 @@ const Timetable = () => {
   <Text style={styles.title}>Timetable</Text>
       <ScrollView style={styles.timetableContainer}>
         <TimeTable
+        theme={{
+            primary: COLORS.COLOR_9,
+          
+        }}
           eventGroups={eventGroups}
           eventOnPress={handleEventPress}
           configs={{
@@ -163,6 +168,7 @@ const styles = StyleSheet.create({
   },
   timetableContainer: {
     marginTop: 6,
+    borderRadius: 5,
   }
 
 });
