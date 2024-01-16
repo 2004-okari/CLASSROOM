@@ -4,12 +4,13 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { RFPercentage as rp } from 'react-native-responsive-fontsize';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Timetable from '../Components/Timetable';
 import Notes from '../Components/Notes';
 import { authentication, db } from '../firebase.config';
 import Update from '../Components/Update';
+import COLORS from '../Constants/colors';
+
 
 const HomeScreen = () => {
 
@@ -39,7 +40,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'yellow',
+    backgroundColor: COLORS.TEXT2,
     padding: wp('2%'),
   },
 });
