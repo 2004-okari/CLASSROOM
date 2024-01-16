@@ -9,7 +9,6 @@ import {
 import { RFPercentage as rp } from 'react-native-responsive-fontsize';
 import COLORS from '../Constants/colors';
 
-
 const eventGroups = [
   {
     courseId: 'AIST3020',
@@ -130,13 +129,12 @@ const Timetable = () => {
 
   return (
     <View style={styles.container}>
-  <Text style={styles.title}>Timetable</Text>
+      <Text style={styles.title}>Timetable</Text>
       <ScrollView style={styles.timetableContainer}>
         <TimeTable
-        theme={{
+          theme={{
             primary: COLORS.COLOR_9,
-          
-        }}
+          }}
           eventGroups={eventGroups}
           eventOnPress={handleEventPress}
           configs={{
@@ -169,6 +167,5 @@ const styles = StyleSheet.create({
   timetableContainer: {
     marginTop: 6,
     borderRadius: 5,
-  }
-
+  },
 });

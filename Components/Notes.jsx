@@ -120,7 +120,12 @@ const Notes = () => {
             <Text style={styles.noteTitle}>{item.title}</Text>
             <Text style={styles.noteDescription}>{item.description}</Text>
             <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={() => editNote(index)}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsNoteModalOpen(true);
+                  editNote(index);
+                }}
+              >
                 <Ionicons name="create-outline" size={20} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => deleteNote(index)}>
@@ -187,9 +192,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
-  }
+    backgroundColor: COLORS.TEXT3,
+    width: 50,
+  },
 });
 
 export default Notes;
