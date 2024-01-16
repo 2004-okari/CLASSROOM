@@ -271,7 +271,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addButton: {
-    color: COLORS.PRIMARY,
     fontSize: rp(2),
     color: COLORS.COLOR_11,
     fontWeight: '500',

@@ -8,8 +8,15 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
+import { RFPercentage as rp } from 'react-native-responsive-fontsize';
+import COLORS from '../Constants/colors';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const Notes = () => {
   const [title, setTitle] = useState('');
@@ -74,8 +81,11 @@ const Notes = () => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text onPress={() => setIsNoteModalOpen(true)}>Add Note</Text>
+      <View style={styles.header}>
+        <Text style={styles.text}>Notes</Text>
+        <Text onPress={() => setIsNoteModalOpen(true)} style={styles.addText}>
+          Add Note
+        </Text>
       </View>
       <Modal isVisible={isNotedModalOpen}>
         <Text onPress={() => setIsNoteModalOpen(false)}>Cancel</Text>
@@ -111,10 +121,10 @@ const Notes = () => {
             <Text style={styles.noteDescription}>{item.description}</Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={() => editNote(index)}>
-                <Text style={styles.editButton}>Edit</Text>
+                <Ionicons name="create-outline" size={20} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => deleteNote(index)}>
-                <Text style={styles.deleteButton}>Delete</Text>
+                <Ionicons name="trash-outline" size={20} />
               </TouchableOpacity>
             </View>
           </View>
@@ -126,7 +136,22 @@ const Notes = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    marginTop: 12,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  text: {
+    fontSize: rp(2.5),
+    fontWeight: 'bold',
+  },
+  addText: {
+    fontSize: rp(2),
+    color: COLORS.COLOR_11,
+    fontWeight: '500',
   },
   input: {
     height: 40,
@@ -143,10 +168,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   noteItem: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'red',
     padding: 16,
+    width: wp('90%'),
     marginBottom: 8,
     borderRadius: 8,
+    marginRight: wp('2%'),
   },
   noteTitle: {
     fontSize: 18,
@@ -157,6 +184,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 8,
   },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  }
 });
 
 export default Notes;
