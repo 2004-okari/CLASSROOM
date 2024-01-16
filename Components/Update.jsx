@@ -41,7 +41,10 @@ const Update = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'events'), orderBy('createdAt', 'asc'));
+        const querySnapshot = await getDocs(
+          collection(db, 'events'),
+          orderBy('createdAt', 'asc')
+        );
         const newEvents = [];
 
         querySnapshot.forEach((doc) => {
@@ -119,25 +122,35 @@ const Update = () => {
 
   return (
     <View>
-      <View>
-        <Text>Upcoming events</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Upcoming events</Text>
         <TouchableOpacity
           onPress={() => {
             setModalVisible(true);
           }}
         >
-          <Text>Add Event</Text>
+          <Text style={styles.addButton}>Add Event</Text>
         </TouchableOpacity>
       </View>
 
-      <Modal isVisible={isModalVisible}>
-        <View>
-          <Text
-            style={{ textAlign: 'center', backgroundColor: 'red' }}
+      <Modal isVisible={isModalVisible} hasBackdrop={false}>
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.cancelButton}
             onPress={() => setModalVisible(false)}
           >
-            cancel
-          </Text>
+            <Ionicons
+              name="close-outline"
+              size={24}
+              color={COLORS.BG2}
+              style={{
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontWeight: 'bold',
+              }}
+            />
+          </TouchableOpacity>
           {/* Inputs go here */}
           <TextInput
             onChangeText={(value) => handleEventFieldChange('title', value)}
@@ -220,10 +233,16 @@ const Update = () => {
                 </View>
                 <Text style={styles.eventDetails3}>{item.time}</Text>
               </View>
-              <Text style={styles.eventTitle}>{item.title}</Text>
-              <Text style={styles.eventDetails5}>{item.note}</Text>
               <View style={styles.eventLocation}>
-                <Ionicons name="location-outline" size={22} color="red" />
+                <Text>Event : </Text>
+                <Text style={styles.eventTitle}>{item.title}</Text>
+              </View>
+              <View style={styles.eventLocation}>
+                <Text>Note : </Text>
+                <Text style={styles.eventDetails5}>{item.note}</Text>
+              </View>
+              <View style={styles.eventLocation}>
+                <Text>Location : </Text>
                 <Text style={styles.eventDetails4}>{item.venue}</Text>
               </View>
             </View>
@@ -240,55 +259,87 @@ const Update = () => {
 export default Update;
 
 const styles = StyleSheet.create({
-  userName: {
-    textAlign: 'center',
-    fontSize: rp(3),
-    fontWeight: 'bold',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: wp('2%'),
   },
+  headerText: {
+    textAlign: 'center',
+    fontSize: rp(2.5),
+    fontWeight: 'bold',
+  },
+  addButton: {
+    color: COLORS.PRIMARY,
+    fontSize: rp(2),
+    color: COLORS.COLOR_11,
+    fontWeight: '500',
+  },
+  modalContainer: {
+    padding: wp('1%'),
+    backgroundColor: 'red',
+    borderRadius: 5,
+  },
+  cancelButton: {
+    backgroundColor: COLORS.TEXT3,
+    aspectRatio: 1,
+    alignSelf: 'flex-end',
+    borderRadius: 5,
+    width: 'auto',
+  },
   flatlistContainer: {
-    // flex: 1,
-    backgroundColor: 'green',
     paddingVertical: hp('0.5%'),
     paddingHorizontal: hp('0.5%'),
   },
   eventItem: {
-    backgroundColor: 'blue',
+    backgroundColor: '#DFF6FF',
     marginRight: wp('2%'),
     padding: wp('2%'),
     borderRadius: wp('2%'),
     width: wp('85%'),
-    // height: 120,
   },
   eventDetailsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: 'purple',
     alignItems: 'center',
-    paddingHorizontal: wp('2%'),
+    padding: wp('2%'),
     borderRadius: 4,
-    // height: wp('10%'),
+    backgroundColor: '#6998AB',
+    marginBottom: 4,
+  },
+  eventDateDetails: {
+    flexDirection: 'column',
+    color: COLORS.BG2,
   },
   eventDetails1: {
+    marginLeft: 3,
     fontWeight: '400',
   },
   eventDetails2: {
-    fontSize: rp(4),
+    fontSize: rp(3.5),
     fontWeight: '900',
   },
   eventDetails3: {
     fontSize: rp(3),
-    fontWeight: '900',
+    fontWeight: '800',
   },
   eventDetails5: {
-    // textAlign: 'center',
+    fontSize: rp(2),
+    fontWeight: '600',
   },
   eventTitle: {
-    fontSize: rp(2.8),
+    fontSize: rp(2),
     fontWeight: '600',
   },
   eventLocation: {
     flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 2,
+  },
+  eventDetails4: {
+    fontSize: rp(2),
+    fontWeight: '600',
   },
   inputText: {
     borderWidth: 1,
@@ -297,6 +348,6 @@ const styles = StyleSheet.create({
     padding: wp('1%'),
     marginVertical: wp('1%'),
     fontSize: wp('5.5%'),
-    backgroundColor: COLORS.TEXT3,
+    backgroundColor: COLORS.BG1,
   },
 });
