@@ -133,7 +133,7 @@ const Update = () => {
         </TouchableOpacity>
       </View>
 
-      <Modal isVisible={isModalVisible} hasBackdrop={false}>
+      <Modal isVisible={isModalVisible}>
         <View style={styles.modalContainer}>
           <TouchableOpacity
             style={styles.cancelButton}
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: wp('2%'),
+    marginBottom: 6,
   },
   headerText: {
     textAlign: 'center',
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: hp('0.5%'),
   },
   eventItem: {
-    backgroundColor: '#DFF6FF',
+    backgroundColor: COLORS.TEXT1,
     marginRight: wp('2%'),
     padding: wp('2%'),
     borderRadius: wp('2%'),
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: wp('2%'),
     borderRadius: 4,
-    backgroundColor: '#6998AB',
+    backgroundColor: COLORS.TEXT3,
     marginBottom: 4,
   },
   eventDateDetails: {

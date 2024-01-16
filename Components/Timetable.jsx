@@ -6,6 +6,8 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import { RFPercentage as rp } from 'react-native-responsive-fontsize';
+
 
 const eventGroups = [
   {
@@ -126,9 +128,9 @@ const Timetable = () => {
   };
 
   return (
-    <View>
-      <Text>Okari Nyandika!</Text>
-      <ScrollView style={styles.container}>
+    <View style={styles.container}>
+  <Text style={styles.title}>Timetable</Text>
+      <ScrollView style={styles.timetableContainer}>
         <TimeTable
           eventGroups={eventGroups}
           eventOnPress={handleEventPress}
@@ -153,6 +155,14 @@ export default Timetable;
 
 const styles = StyleSheet.create({
   container: {
-    // height: hp('40%'),
+    marginTop: 12,
   },
+  title: {
+    fontSize: rp(2.5),
+    fontWeight: 'bold',
+  },
+  timetableContainer: {
+    marginTop: 6,
+  }
+
 });
