@@ -15,10 +15,9 @@ import {
 import COLORS from '../Constants/colors';
 import TextInput from 'react-native-text-input-interactive';
 import { useNavigation } from '@react-navigation/native';
+import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
+import { authentication, db } from '../firebase.config';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { authentication } from '../firebase.config';
-// import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
-// import { db } from '../firebase.config';
 
 const SignupScreen = () => {
   const navigation = useNavigation();
@@ -95,6 +94,8 @@ const SignupScreen = () => {
     }
   };
 
+  const usersRef = collection(db, 'users');
+
   const [isSignedUp, setIsSignedUp] = useState(false);
   const registerUser = () => {
     if (!isUsernameValid(username)) {
@@ -117,23 +118,30 @@ const SignupScreen = () => {
         setUser(username);
         console.log(user);
 
-        // // Set the displayName
-        // // await updateProfile(authentication.currentUser, {
-        // //   displayName: username,
-        // // });
-        // // Database connection
-        // const userId = user.uid;
-        // const userDocRef = doc(db, 'users', userId);
-        // const docRef = setDoc(userDocRef, {
-        //   username,
-        //   email,
-        //   password,
-        //   userId,
-        // });
+        const userInfo = {
+          email: user.email,
+          image: '', // Placeholder for image URL or path
+          course: '', // Placeholder for course information
+          admissionNumber: '', // Placeholder for admission number
+          name: '', // Placeholder for user's name
+          username: username,
+          phoneNumber: '',
+        };
+
+        // Add a new document with a generated id to the 'users' collection
+        usersRef
+          .doc(user.uid)
+          .set(userInfo)
+          .then(() => {
+            console.log('User added with UID: ', user.uid);
+          })
+          .catch((error) => {
+            console.error('Error adding user: ', error);
+          });
       })
       .then(() => {
         setIsSignedUp(true);
-        navigation.navigate('Home');
+        navigation.navigate('Login');
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {
@@ -154,7 +162,7 @@ const SignupScreen = () => {
   return (
     <View style={styles.container}>
       <View>
-        <Image source={require('../assets/6333050.jpg')} style={styles.image} />
+        {/* <Image source={require('../assets/6333050.jpg')} style={styles.image} /> */}
       </View>
       <View>
         <Text style={styles.text1}>Register</Text>
@@ -200,11 +208,9 @@ const SignupScreen = () => {
           enableIcon={true}
           onBlur={onBlurPassword}
           onIconPress={togglePasswordVisibility}
-          iconImageSource={
-            isPasswordVisible
-              ? require('../assets/favicon.png')
-              : require('../assets/favicon.png')
-          }
+          // iconImageSource={
+          //   isPasswordVisible ? require('../assets/favicon.png') : require('../assets/favicon.png')
+          // }
         />
         <TouchableOpacity style={styles.button} onPress={registerUser}>
           <Text style={styles.text3}>Signup</Text>

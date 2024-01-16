@@ -1,7 +1,13 @@
-import { StyleSheet, Text, View, Alert } from 'react-native';
+import { StyleSheet, Text, View, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import TimeTable from '@mikezzb/react-native-timetable';
 import Modal from 'react-native-modal';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import { RFPercentage as rp } from 'react-native-responsive-fontsize';
+import COLORS from '../Constants/colors';
 
 const eventGroups = [
   {
@@ -23,7 +29,7 @@ const eventGroups = [
     },
   },
   {
-    courseId: 'CSCI2100',
+    courseId: 'CSCI2  ``100',
     title: 'Data Structures',
     sections: {
       'A - LEC': {
@@ -46,7 +52,7 @@ const eventGroups = [
     sections: {
       'BEC1 - CLW': {
         days: [2, 4],
-        startTimes: ['10:30', '8:30'],
+        startTimes: ['10:30', '9:30'],
         endTimes: ['11:15', '10:15'],
         locations: ['Online Teaching', 'Online Teaching'],
       },
@@ -109,25 +115,57 @@ const eventGroups = [
 ];
 
 const Timetable = () => {
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isTimesModalVisible, setIsTimesModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const handleEventPress = (event) => {
+    setSelectedEvent(event);
+    setIsTimesModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsTimesModalVisible(false);
+  };
 
   return (
-    <View>
-      <Text>Okari Nyandika!</Text>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <Text style={styles.title}>Timetable</Text>
+      <ScrollView style={styles.timetableContainer}>
         <TimeTable
+          theme={{
+            primary: COLORS.COLOR_9,
+          }}
           eventGroups={eventGroups}
-          // events={events}
-          eventOnPress={(event) => Alert.alert(`${JSON.stringify(event)}`)}
+          eventOnPress={handleEventPress}
           configs={{
             numOfDays: 5,
+            endHour: 18,
+            startHour: 9,
           }}
         />
-      </View>
+        <Modal isVisible={isTimesModalVisible}>
+          <View>
+            <Text>{JSON.stringify(selectedEvent)}</Text>
+            <Text onPress={handleCloseModal}>Cancel</Text>
+          </View>
+        </Modal>
+      </ScrollView>
     </View>
   );
 };
 
 export default Timetable;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 12,
+  },
+  title: {
+    fontSize: rp(2.5),
+    fontWeight: 'bold',
+  },
+  timetableContainer: {
+    marginTop: 6,
+    borderRadius: 5,
+  },
+});

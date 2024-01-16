@@ -1,98 +1,137 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, FlatList, TouchableOpacity } from 'react-native';
-import { collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase.config';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
+import { RFPercentage as rp } from 'react-native-responsive-fontsize';
+import COLORS from '../Constants/colors';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const Notes = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
+  const [isNotedModalOpen, setIsNoteModalOpen] = useState(false);
 
-  const addNote = () => {
-    const newNoteRef = notesRef.push();
-    newNoteRef.set({
-      title: title,
-      description: description,
-    }, (error) => {
-      if (error) {
-        alert('Failed to add note!');
+  const storeNote = async () => {
+    try {
+      const note = { title, description };
+      const updatedNotes = [...notes];
+
+      if (editIndex !== null) {
+        // Editing existing note
+        updatedNotes[editIndex] = note;
+        setEditIndex(null);
       } else {
-        setTitle('');
-        setDescription('');
-        fetchNotes();
+        // Adding new note
+        updatedNotes.push(note);
       }
-    });
+
+      setNotes(updatedNotes);
+      const jsonValue = JSON.stringify(updatedNotes);
+      await AsyncStorage.setItem('@notes', jsonValue);
+
+      // Clear input fields after adding/editing note
+      setTitle('');
+      setDescription('');
+    } catch (e) {
+      // saving error
+    }
   };
 
-  const fetchNotes = () => {
-    notesRef.on('value', (snapshot) => {
-      const fetchedNotes = [];
-      snapshot.forEach((childSnapshot) => {
-        const key = childSnapshot.key;
-        const data = childSnapshot.val();
-        fetchedNotes.push({ id: key, ...data });
-      });
-      setNotes(fetchedNotes);
-    });
+  const deleteNote = async (index) => {
+    const updatedNotes = [...notes];
+    updatedNotes.splice(index, 1);
+    setNotes(updatedNotes);
+    const jsonValue = JSON.stringify(updatedNotes);
+    await AsyncStorage.setItem('@notes', jsonValue);
   };
 
-  const deleteNote = (id) => {
-    notesRef.child(id).remove(error => {
-      if (error) {
-        alert('Failed to delete note!');
-      } else {
-        fetchNotes();
-      }
-    });
+  const editNote = (index) => {
+    const selectedNote = notes[index];
+    setTitle(selectedNote.title);
+    setDescription(selectedNote.description);
+    setEditIndex(index);
   };
 
-  const editNote = (id, newTitle, newDescription) => {
-    notesRef.child(id).update({
-      title: newTitle,
-      description: newDescription,
-    }, (error) => {
-      if (error) {
-        alert('Failed to edit note!');
-      } else {
-        fetchNotes();
-      }
-    });
+  const loadNotes = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@notes');
+      return jsonValue != null ? setNotes(JSON.parse(jsonValue)) : null;
+    } catch (e) {
+      // error reading value
+    }
   };
 
   useEffect(() => {
-    fetchNotes();
+    loadNotes();
   }, []);
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Title"
-        value={title}
-        onChangeText={setTitle}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Notes"
-        value={description}
-        onChangeText={setDescription}
-        multiline
-      />
-      <Button title="Add Note" onPress={addNote} />
+      <View style={styles.header}>
+        <Text style={styles.text}>Notes</Text>
+        <Text onPress={() => setIsNoteModalOpen(true)} style={styles.addText}>
+          Add Note
+        </Text>
+      </View>
+      <Modal isVisible={isNotedModalOpen}>
+        <Text onPress={() => setIsNoteModalOpen(false)}>Cancel</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Title"
+          value={title}
+          onChangeText={setTitle}
+        />
+        <TextInput
+          style={styles.input2}
+          placeholder="Notes"
+          value={description}
+          onChangeText={setDescription}
+          multiline
+        />
+        <Button
+          title={editIndex !== null ? 'Update Note' : 'Add Note'}
+          onPress={() => {
+            storeNote();
+            setIsNoteModalOpen(false);
+          }}
+        />
+      </Modal>
 
       <FlatList
+        horizontal
         data={notes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => (
           <View style={styles.noteItem}>
             <Text style={styles.noteTitle}>{item.title}</Text>
             <Text style={styles.noteDescription}>{item.description}</Text>
-            <TouchableOpacity onPress={() => deleteNote(item.id)}>
-              <Text>Delete</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => editNote(item.id, item.title, item.description)}>
-              <Text>Edit</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsNoteModalOpen(true);
+                  editNote(index);
+                }}
+              >
+                <Ionicons name="create-outline" size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => deleteNote(index)}>
+                <Ionicons name="trash-outline" size={20} />
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       />
@@ -102,8 +141,22 @@ const Notes = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
+    marginTop: 12,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  text: {
+    fontSize: rp(2.5),
+    fontWeight: 'bold',
+  },
+  addText: {
+    fontSize: rp(2),
+    color: COLORS.COLOR_11,
+    fontWeight: '500',
   },
   input: {
     height: 40,
@@ -112,11 +165,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingHorizontal: 8,
   },
+  input2: {
+    height: 120,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 8,
+    paddingHorizontal: 8,
+  },
   noteItem: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'red',
     padding: 16,
+    width: wp('90%'),
     marginBottom: 8,
     borderRadius: 8,
+    marginRight: wp('2%'),
   },
   noteTitle: {
     fontSize: 18,
@@ -126,6 +188,14 @@ const styles = StyleSheet.create({
   noteDescription: {
     fontSize: 16,
     marginBottom: 8,
+  },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: COLORS.TEXT3,
+    width: 50,
   },
 });
 
