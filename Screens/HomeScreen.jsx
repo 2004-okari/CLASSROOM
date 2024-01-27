@@ -22,7 +22,7 @@ const HomeScreen = () => {
   return (
     <>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <View>
+        <View style={styles.subContainer}>
           <View>
             <Text style={styles.userName}>Okari Nyandika</Text>
           </View>
@@ -47,7 +47,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.TEXT2,
-    padding: 8,
+    paddingHorizontal: 8,
     marginTop: 60,
+  },
+  subContainer: {
   },
 });

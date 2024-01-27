@@ -4,8 +4,8 @@ import HomeScreen from '../Screens/HomeScreen';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Profile from '../Screens/Profile';
-import ChatScreen from '../Screens/ChatScreen';
 import COLORS from '../Constants/colors';
+import ChatNavigation from './ChatNavigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +42,7 @@ const BottomTabNavigation = () => {
           headerTitle: 'Classroom',
         }}
         name="Chat"
-        component={ChatScreen}
+        component={ChatNavigation}
       />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
