@@ -1,4 +1,11 @@
-import { ScrollView, StyleSheet, Text, View, FlatList } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  SafeAreaView,
+} from 'react-native';
 import React, { useState } from 'react';
 import {
   widthPercentageToDP as wp,
@@ -11,9 +18,7 @@ import { authentication, db } from '../firebase.config';
 import Update from '../Components/Update';
 import COLORS from '../Constants/colors';
 
-
 const HomeScreen = () => {
-
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View>
@@ -24,7 +29,7 @@ const HomeScreen = () => {
         <Update />
       </View>
 
-      <View >
+      <View>
         <Timetable />
       </View>
 
