@@ -20,23 +20,24 @@ import COLORS from '../Constants/colors';
 
 const HomeScreen = () => {
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <View>
-        <Text style={styles.userName}>Okari Nyandika</Text>
-      </View>
-
-      <View>
-        <Update />
-      </View>
-
-      <View>
-        <Timetable />
-      </View>
-
-      <View>
-        <Notes />
-      </View>
-    </ScrollView>
+    <>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <View>
+          <View>
+            <Text style={styles.userName}>Okari Nyandika</Text>
+          </View>
+          <View>
+            <Update />
+          </View>
+          <View>
+            <Timetable />
+          </View>
+          <View>
+            <Notes />
+          </View>
+        </View>
+      </ScrollView>
+    </>
   );
 };
 
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.TEXT2,
-    padding: wp('2%'),
+    padding: 8,
+    marginTop: 60,
   },
 });
