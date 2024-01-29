@@ -25,7 +25,6 @@ const ChatScreen = () => {
       const querySnapshot = await getDocs(collection(db, 'users'));
       const userData = querySnapshot.docs.map((doc) => doc.data());
       setUsers(userData);
-      console.log(users);
     } catch (error) {
       console.error('Error getting users: ', error);
     }
@@ -34,8 +33,6 @@ const ChatScreen = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
-
 
   return (
     <>
