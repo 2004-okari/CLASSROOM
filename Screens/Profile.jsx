@@ -29,7 +29,7 @@ const Profile = () => {
         />
       </TouchableOpacity>
       <Modal isVisible={modal}>
-        <View style={{marginTop: 40}}>
+        <View style={{ marginTop: 40 }}>
           <TouchableOpacity onPress={() => setModal(!modal)}>
             <Ionicons name="close" size={30} />
           </TouchableOpacity>
@@ -63,11 +63,12 @@ const Profile = () => {
               <Text style={styles.emptyFeedsText}>
                 Capture the moment with a friend
               </Text>
-              <Button title="Create your first feed" />
+              <Button title="Create your first feed" onPress={() => {}} />
             </View>
           ) : (
             <View>
               <Text>Posts ({feeds.length})</Text>
+              <Button title="Add feeds" />
             </View>
           )}
         </View>
@@ -128,7 +129,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 10,
-
   },
   idImage: {
     width: '100%',
