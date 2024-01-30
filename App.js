@@ -7,6 +7,7 @@ import SignupScreen from './Screens/SignupScreen';
 import SplashScreen from './Screens/SplashScreen';
 import BottomTabNavigation from './Components/BottomTabNavigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import FeedPickup from './Screens/FeedPickup';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Home" component={BottomTabNavigation} />
+        <Stack.Screen name='FeedPickup' component={FeedPickup} />
       </Stack.Navigator>
     </NavigationContainer>
   );
