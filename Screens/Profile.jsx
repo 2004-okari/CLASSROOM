@@ -10,8 +10,10 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 
 const Profile = () => {
+  const navigation = useNavigation();
   const [feeds, setFeeds] = useState([]);
   const [modal, setModal] = useState(false);
 
@@ -63,12 +65,22 @@ const Profile = () => {
               <Text style={styles.emptyFeedsText}>
                 Capture the moment with a friend
               </Text>
-              <Button title="Create your first feed" onPress={() => {}} />
+              <Button
+                title="Create your first feed"
+                onPress={() => {
+                  navigation.navigate('FeedPickup');
+                }}
+              />
             </View>
           ) : (
             <View>
               <Text>Posts ({feeds.length})</Text>
-              <Button title="Add feeds" />
+              <Button
+                title="Add feeds"
+                onPress={() => {
+                  navigation.navigate('FeedPickup');
+                }}
+              />
             </View>
           )}
         </View>
