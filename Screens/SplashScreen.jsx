@@ -25,6 +25,7 @@ const SplashScreen = () => {
             .catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
+              navigation.navigate('Signup');
             });
         } else {
           navigation.navigate('Login');

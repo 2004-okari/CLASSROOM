@@ -118,7 +118,9 @@ const SignupScreen = () => {
         setUser(username);
         console.log(user);
 
-        const userInfo = {
+        const userId = user.uid;
+        const userDocRef = doc(db, 'users', userId);
+        const docRef = setDoc(userDocRef, {
           email: user.email,
           image: '', // Placeholder for image URL or path
           course: '', // Placeholder for course information
@@ -126,18 +128,8 @@ const SignupScreen = () => {
           name: '', // Placeholder for user's name
           username: username,
           phoneNumber: '',
-        };
-
-        // Add a new document with a generated id to the 'users' collection
-        usersRef
-          .doc(user.uid)
-          .set(userInfo)
-          .then(() => {
-            console.log('User added with UID: ', user.uid);
-          })
-          .catch((error) => {
-            console.error('Error adding user: ', error);
-          });
+          userId: user.uid,
+        });
       })
       .then(() => {
         setIsSignedUp(true);
