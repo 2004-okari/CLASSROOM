@@ -12,7 +12,7 @@ import {
 import TextInput from 'react-native-text-input-interactive';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import PhoneInput from "react-native-phone-number-input";
+import PhoneInput from 'react-native-phone-number-input';
 
 const EditProfile = () => {
   const [userData, setUserData] = useState({});
@@ -24,7 +24,7 @@ const EditProfile = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [username, setUsername] = useState('');
   const [isFocus, setIsFocus] = useState(false);
-  const phoneInput = useRef<PhoneInput>(null);
+  const [formattedValue, setFormattedValue] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,11 +115,21 @@ const EditProfile = () => {
         <Text>Image:</Text>
         <TextInput value={image} onChangeText={(text) => setImage(text)} />
         <Text>Phone Number:</Text>
-        <TextInput
-          placeholder="Phone Number"
-          value={phoneNumber}
-          onChangeText={(text) => setPhoneNumber(text)}
+        <PhoneInput
+          defaultValue={phoneNumber}
+          defaultCode="KE"
+          layout="first"
+          onChangeText={(text) => {
+            setPhoneNumber(text);
+          }}
+          onChangeFormattedText={(text) => {
+            setFormattedValue(text);
+          }}
+          withDarkTheme
+          withShadow
+          autoFocus
         />
+
         <Text>Username:</Text>
         <TextInput
           value={username}
