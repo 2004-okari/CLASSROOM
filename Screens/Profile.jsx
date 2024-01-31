@@ -85,8 +85,15 @@ const Profile = () => {
           )}
         </View>
         <View style={styles.buttonContainer}>
-          <Button title="Edit profile" />
-          <Button title="Settings" />
+          <Button title="Edit profile" onPress={() => {
+            navigation.navigate('EditProfile');
+          }} />
+          <Button
+            title="Settings"
+            onPress={() => {
+              navigation.navigate('Settings');
+            }}
+          />
           <Button title="Logout" />
         </View>
       </ScrollView>
